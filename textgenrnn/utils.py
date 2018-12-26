@@ -1,4 +1,4 @@
-from keras.callbacks import LearningRateScheduler, Callback
+﻿from keras.callbacks import LearningRateScheduler, Callback
 from keras.models import Model, load_model
 from keras.preprocessing import sequence
 from keras.preprocessing.text import Tokenizer, text_to_word_sequence
@@ -9,7 +9,7 @@ import json
 import h5py
 import csv
 import re
-
+import codecs
 
 def textgenrnn_sample(preds, temperature):
     '''
@@ -110,7 +110,7 @@ def textgenrnn_texts_from_file(file_path, header=True,
     Retrieves texts from a newline-delimited file and returns as a list.
     '''
 
-    with open(file_path, 'r', encoding='utf8', errors='ignore') as f:
+    with codecs.open(file_path, 'r', 'utf8') as f:
         if header:
             f.readline()
         if is_csv:
@@ -129,7 +129,7 @@ def textgenrnn_texts_from_file_context(file_path, header=True):
     Retrieves texts+context from a two-column CSV.
     '''
 
-    with open(file_path, 'r', encoding='utf8', errors='ignore') as f:
+    with codecs.open(file_path, 'r', 'utf8') as f:
         if header:
             f.readline()
         texts = []

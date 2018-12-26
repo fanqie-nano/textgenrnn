@@ -1,4 +1,4 @@
-from keras.callbacks import LearningRateScheduler, Callback
+﻿from keras.callbacks import LearningRateScheduler, Callback
 from keras.models import Model, load_model
 from keras.preprocessing import sequence
 from keras.preprocessing.text import Tokenizer, text_to_word_sequence
@@ -16,7 +16,7 @@ from .model_training import *
 from .utils import *
 import csv
 import re
-
+import codecs
 
 class textgenrnn:
     META_TOKEN = '<s>'
@@ -46,15 +46,13 @@ class textgenrnn:
                                            'textgenrnn_vocab.json')
 
         if config_path is not None:
-            with open(config_path, 'r',
-                      encoding='utf8', errors='ignore') as json_file:
+            with codecs.open(config_path, 'r', 'utf8') as json_file:
                 self.config = json.load(json_file)
 
         self.config.update({'name': name})
         self.default_config.update({'name': name})
 
-        with open(vocab_path, 'r',
-                  encoding='utf8', errors='ignore') as json_file:
+        with codecs.open(vocab_path, 'r', 'utf8') as json_file:
             self.vocab = json.load(json_file)
 
         self.tokenizer = Tokenizer(filters='', char_level=True)
@@ -81,7 +79,7 @@ class textgenrnn:
                                                'single_text', False),
                                            max_gen_length)
             if not return_as_list:
-                print("{}\n".format(gen_text))
+                print(gen_text)
             gen_texts.append(gen_text)
         if return_as_list:
             return gen_texts
@@ -242,12 +240,12 @@ class textgenrnn:
                                       cfg=self.config)
 
         # Save the files needed to recreate the model
-        with open('{}_vocab.json'.format(self.config['name']),
-                  'w', encoding='utf8') as outfile:
+        with codecs.open('{}_vocab.json'.format(self.config['name']),
+                  'w', 'utf8') as outfile:
             json.dump(self.tokenizer.word_index, outfile, ensure_ascii=False)
 
-        with open('{}_config.json'.format(self.config['name']),
-                  'w', encoding='utf8') as outfile:
+        with codecs.open('{}_config.json'.format(self.config['name']),
+                  'w', 'utf8') as outfile:
             json.dump(self.config, outfile, ensure_ascii=False)
 
         self.train_on_texts(texts, new_model=True,
@@ -292,7 +290,7 @@ class textgenrnn:
             self.train_on_texts(texts, context_labels=context_labels, **kwargs)
 
     def train_from_largetext_file(self, file_path, new_model=True, **kwargs):
-        with open(file_path, 'r', encoding='utf8', errors='ignore') as f:
+        with codecs.open(file_path, 'r', 'utf8') as f:
             texts = [f.read()]
 
         if new_model:
@@ -303,7 +301,7 @@ class textgenrnn:
 
     def generate_to_file(self, destination_path, **kwargs):
         texts = self.generate(return_as_list=True, **kwargs)
-        with open(destination_path, 'w') as f:
+        with codecs.open(destination_path, 'w') as f:
             for text in texts:
                 f.write("{}\n".format(text))
 
